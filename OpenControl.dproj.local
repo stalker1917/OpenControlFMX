@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.543,D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.13\Unit2.pas=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.13\Base.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.742,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.13\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.196,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\OCGraph.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.010,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.12\Debug.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.581,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\Finance.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.534,D:\Андрей\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\Мои программы\Delphi\Проект Дурак\Durak 0.98_FireMonkey\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.330,D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.13\Base.pas=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.13\BaseManager.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.297,D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\OpenControl.dproj=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\Aviator.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.565,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\AreaManager.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.819,D:\Андрей\Documents\Embarcadero\Studio\Projects\Unit1.fmx=D:\Мои программы\Delphi\Проект Дурак\Durak 0.98_FireMonkey\Unit1.fmx</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.419,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.11\OKCANCL2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.707,D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.11\OKCANCL2.pas=</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.819,D:\Андрей\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\Мои программы\Delphi\Проект Дурак\Durak 0.98_FireMonkey\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.990,=D:\Андрей\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.565,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\ControlConsts.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.373,D:\Мои программы\Delphi\Лохотрон\LoxoBeta\Durak.dproj=D:\Мои программы\Delphi\Лохотрон\LoxoBeta\Aviator.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.203,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\TimeManager.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.518,=D:\Мои программы\Delphi\Проект Total Control\OpenControlFMX 0.1\AIManager.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.222,D:\Мои программы\Delphi\Проект Дурак\Durak 0.99_FM\Durak.dproj=D:\Мои программы\Delphi\Проект Дурак\Durak 0.99_FM\Project1.dproj</Transaction>
+  </Transactions>
+	<ActiveMobileDevice>
+		<NoProfile iOSSimulator="iPhone5" Android=""/>
+	</ActiveMobileDevice>
+	<BT_BuildType>Debug</BT_BuildType>
+	<ProjectSortOrder AutoSort="0" SortType="0">
+    <File Path="android-support-v4.dex.jar"/>
+    <File Path="apk-expansion.dex.jar"/>
+    <File Path="cloud-messaging.dex.jar"/>
+    <File Path="fmx.dex.jar"/>
+    <File Path="google-analytics-v2.dex.jar"/>
+    <File Path="google-play-billing.dex.jar"/>
+    <File Path="google-play-licensing.dex.jar"/>
+    <File Path="google-play-services.dex.jar"/>
+    <File Path="android-support-v4.dex.jar"/>
+    <File Path="apk-expansion.dex.jar"/>
+    <File Path="cloud-messaging.dex.jar"/>
+    <File Path="fmx.dex.jar"/>
+    <File Path="google-analytics-v2.dex.jar"/>
+    <File Path="google-play-billing.dex.jar"/>
+    <File Path="google-play-licensing.dex.jar"/>
+    <File Path="google-play-services.dex.jar"/>
+    <File Path="AIManager.pas"/>
+    <File Path="AreaManager.pas"/>
+    <File Path="ControlConsts.pas"/>
+    <File Path="Finance.pas"/>
+    <File Path="OCGraph.pas"/>
+    <File Path="TimeManager.pas"/>
+    <File Path="Unit1.pas"/>
+    <File Path="Unit1.fmx"/>
+    <File Path="Debug.pas"/>
+    <File Path="BaseManager.pas"/>
+  </ProjectSortOrder>
+</BorlandProject>
