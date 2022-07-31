@@ -1,0 +1,5 @@
+Terrain init completed
+Bitmaps init completed
+Load terrain bitmap completed
+Load area bitmaps completed
+Main map ititialized
