@@ -8,22 +8,14 @@ uses
   FMX.Controls.Presentation,Math, FMX.Edit, FMX.Objects, FMX.Media,
   Finance,ControlConsts,TimeManager,AiManager,OCGraph,AreaManager, BaseManager,
   FMX.Memo.Types, FMX.ScrollBox, FMX.Memo, System.ImageList, FMX.ImgList,Debug,
-  FMX.ListBox
+  FMX.ListBox,LabelGroup
 {$IFDEF ANDROID}
    ,System.IOUtils;
  {$ELSE}
  ;
  {$ENDIF}
 //const
- 
- {   PaintRect : TRectF  =
-    (
-      Left: 0;
-      Top: 0;
-      Right: 10;
-      Bottom: 10;
-    );
-  HighLabels = 7; }
+
 type
 
 
@@ -44,16 +36,10 @@ type
     Edit7: TLabel;
     Edit8: TLabel;
     Edit9: TLabel;
-    Label6: TLabel;
+    LabelR11: TLabel;
     Image1: TImage;
     Label8: TLabel;
     Label9: TLabel;
-    Label4: TLabel;
-    Label5: TLabel;
-    Label26: TLabel;
-    Label27: TLabel;
-    Label28: TLabel;
-    Label29: TLabel;
     Button16: TButton;
     MediaPlayer1: TMediaPlayer;
     Memo1: TMemo;
@@ -111,6 +97,24 @@ type
     SpeedButton4: TSpeedButton;
     Memo2: TMemo;
     Memo3: TMemo;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    LB1: TLabel;
+    LB2: TLabel;
+    Image5: TImage;
+    Lb3: TLabel;
+    ImageC2: TImage;
+    ImageC1: TImage;
+    ImageC3: TImage;
+    ImageC4: TImage;
+    Rectangle1: TRectangle;
+    Label6: TLabel;
+    LabelR12: TLabel;
+    LabelR21: TLabel;
+    LabelR22: TLabel;
+    LabelR23: TLabel;
+
     procedure FormCreate(Sender: TObject);
     //procedure Button2Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -177,13 +181,28 @@ type
     procedure EditClick(Button: TMouseButton;Time:Integer);
     procedure Edit9MouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
+    procedure GroupBoxVisible(i:Integer;v:boolean);
+    procedure RadioSetChecked(i,j:Integer);
+    function  GroupBoxIsVisible(i:Integer):Boolean;
+    function  RadioChecked(i,j:Integer):Boolean;
+    procedure LabelR11Click(Sender: TObject);
+    procedure LabelR12Click(Sender: TObject);
+    procedure LabelR21Click(Sender: TObject);
+    procedure LabelR22Click(Sender: TObject);
+    procedure LabelR23Click(Sender: TObject);
+
+
+
   private
     { Private declarations }
   public
     { Public declarations }
+    LabelGroup1, LabelGroup2 : TLabelGroup;
     procedure OknoTo1;
-    procedure OknoTo2;
+    procedure OknoTo2(i:Integer);
     procedure InitCompArrays;
+    procedure SetLastTerrain;
+    procedure SetLastHouse(i:Integer);
   end;
 
 
@@ -226,6 +245,7 @@ var
   SpeedArr  : Array[0..3] of TSpeedButton;
   TimerEdits : Array [0..7] of TLabel;
   Circles : Array[1..4] of TCircle;
+  ICircles : Array[1..4] of TImage;
   RadioArray : Array [1..HangarHigh] of Byte;
   RadioGroups : Array [1..HangarHigh] of TRadioButton;
   RadioArrayIndex : Byte;
@@ -264,15 +284,18 @@ end;
 
 procedure TForm1.OutPutBuilding;
 begin
-  GroupBox1.Visible := False;
+  //GroupBox1.Visible := False;
+  GroupBoxVisible(1,False);
   Label6.Text := 'Строящийся ' + s;
-  GroupBox2.Visible := False;
+  //GroupBox2.Visible := False;
+   GroupBoxVisible(2,False);
   //Circle1.Visible := False;
   //Circle2.Visible := False;
   //Circle3.Visible := False;
   //Shape4.Visible := False;
   ShapesVisible(False);
-  Image1.Bitmap := BuildingBitmaps[Typeb];
+  SetLastHouse(Typeb);
+  //Image1.Bitmap := BuildingBitmaps[Typeb];
   //Edit13.Visible := True;
   //Edit13.Text := 'Осталось до конца строительства: ' +  Int64ToEnd(area2[Teki,Tekj].TimeToPusk); //IntToStr((area2[Teki,Tekj].TimeToPusk-TimeStamp) div (24*3600)) +' д.' + IntToStr(((area2[Teki,Tekj].TimeToPusk-TimeStamp) mod (24*3600)) div 3600) + ' ч.';
 end;
@@ -286,7 +309,7 @@ begin
 end;
 
 procedure TForm1.TimerPosition(Mode: Byte);
-const LAlignTimer=120;
+const LAlignTimer=65;
 const Mode0Align=25;
 var i,j:Integer;
 
@@ -296,14 +319,14 @@ if Mode<>0 then
    for i:=0 to 7 do
      begin
         case (i mod 3) of
-        0: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+36*(i div 3));
-        1: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+36*(i div 3)+12);
-        2: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+36*(i div 3)+12+15);
+        0: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+39*(i div 3));
+        1: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+39*(i div 3)+15);
+        2: TimerEdits[i].Position.X := EtalonToX(LAlignTimer+39*(i div 3)+15+15);
         end;
-        TimerEdits[i].Position.Y := EtalonToY(8-6);
+        TimerEdits[i].Position.Y := EtalonToY(30);
         TimerEdits[i].TextSettings.Font.Size := 18;
      end;
-   Label3.Position.X := EtalonToX(10);//Panel1.Width/2 - (Label3.TextSettings.Font.Size*0.25*Length(Label3.Text));
+   Label3.Position.X := EtalonToX(70);//Panel1.Width/2 - (Label3.TextSettings.Font.Size*0.25*Length(Label3.Text));
    Label3.Position.Y := EtalonToY(8);
   end
 else
@@ -319,8 +342,54 @@ else
         TimerEdits[i].TextSettings.Font.Size := 30;
      end;
    Label3.Position.X := EtalonToX(70);//Panel1.Width/2 - (Label3.TextSettings.Font.Size*0.25*Length(Label3.Text));
-   Label3.Position.Y := EtalonToY(8);
+   Label3.Position.Y := EtalonToY(15);
   end;
+end;
+
+procedure TForm1.SetLastTerrain;
+var FColor:TAlphaColor;
+begin
+  Image1.Bitmap := AreaBitmaps[LastTerrain];
+  case LastTerrain of
+    0: FColor := TAlphaColorRec.White; //Black;
+    1: FColor := TAlphaColorRec.White;
+    2: FColor := TAlphaColorRec.White;
+  end;
+  //Label6.FontColor := FColor;
+  Label6.TextSettings.FontColor := FColor;
+  Label7.TextSettings.FontColor := FColor;
+end;
+
+procedure TForm1.SetLastHouse;
+var FColor1,FColor2:TAlphaColor;
+begin
+  Image1.Bitmap := BuildingBitmaps[i];
+  case i of
+    0:
+     begin
+       FColor1 := TAlphaColorRec.White;
+       FColor2 := TAlphaColorRec.Black;
+     end;
+    1:
+     begin
+       FColor1 := TAlphaColorRec.White;
+       FColor2 := TAlphaColorRec.White;
+     end;
+    2:
+     begin
+       FColor1 := TAlphaColorRec.Black;
+       FColor2 := TAlphaColorRec.Black;
+     end;
+    3:
+     begin
+       FColor1 := TAlphaColorRec.Black;
+       FColor2 := TAlphaColorRec.White;
+     end;
+  end;
+  Label1.TextSettings.FontColor := FColor1;
+  Label2.TextSettings.FontColor := FColor1;
+  Label6.TextSettings.FontColor := FColor2;
+  Label7.TextSettings.FontColor := FColor2;
 end;
 
 procedure TForm1.ShapesPosition(Mode: Byte);
@@ -330,21 +399,21 @@ begin
     1: for I := Low(Circles) to High(Circles) do  //Открыт экран базы
       begin
         {$IFDEF ANDROID}
-        Circles[i].Position.Y := EtalonToY(600);
-        Circles[i].Position.X := EtalonToX(70*i-60); //20-60...
+        ICircles[i].Position.Y := EtalonToY(600);
+        ICircles[i].Position.X := EtalonToX(70*i-60); //20-60...
         {$ELSE}
-        Circles[i].Position.Y := EtalonToY(580);
-        Circles[i].Position.X := EtalonToX(40*i-20); //20-60...
+        ICircles[i].Position.Y := EtalonToY(580);
+        ICircles[i].Position.X := EtalonToX(40*i-20); //20-60...
         {$ENDIF}
       end
     else for I := Low(Circles) to High(Circles) do //Стандартная позиция
       begin
         {$IFDEF ANDROID}
-        Circles[i].Position.Y:= EtalonToY(392 + 31 - 62*(i mod 2)+SmallRadius/2);
+        ICircles[i].Position.Y:= EtalonToY(392 + 31 - 62*(i mod 2)+SmallRadius/2);
         {$ELSE}
-        Circles[i].Position.Y:= EtalonToY(392 - 31*(i mod 2));
+        ICircles[i].Position.Y:= EtalonToY(392 - 31*(i mod 2));
         {$ENDIF}
-        Circles[i].Position.X := EtalonToX(12+120*(i div 3));
+        ICircles[i].Position.X := EtalonToX(12+120*(i div 3));
       end;
   end;
 end;
@@ -359,7 +428,10 @@ Procedure TForm1.OknoTo1;
 begin
   Okno := 1;
   Button4.Enabled := True;
+  LB2.Enabled := True;
   Button1.Text := 'Войти в здание';
+  LB1.Text :=  'Войти в здание';
+  Image5.Visible := False;
 end;
 
 Procedure TForm1.OknoTo2;
@@ -367,7 +439,11 @@ begin
   Okno:=2;
   CLS;
   Button4.Enabled := False;
+  LB2.Enabled := False;
   Button1.Text := 'Выйти в базу';
+  LB1.Text :=  'Выйти в базу';
+  Image5.Visible := True;
+  Image5.Bitmap := InBuildingBitmaps[i];
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -376,7 +452,7 @@ S:String; Spr:String;
 i,j:Integer;
 RealName : Boolean;
 begin
-if not Samv then Button4.Visible := True;
+if not Samv then LB2.Visible := True;//Button4.Visible := True;
 case Okno of
 
 0:
@@ -387,13 +463,14 @@ if Samv then //Если "Отменить полёт"
   begin
     Samv := False;
     Button1.Text := 'Войти в базу';
+    LB1.Text := 'Войти в базу';
     case PlaneEvent of
       1: Bombing(1,TekSami,Teki,Tekj);
       2: FoundBase(1,TekSami,Teki,Tekj);
     end;
     for I := 0 to 3 do
       begin
-        Circles[i+1].Visible := True;
+        ICircles[i+1].Visible := True;
         ResLabels[i].Visible := True;
       end;
 
@@ -402,7 +479,11 @@ if Samv then //Если "Отменить полёт"
     Label8.Scale.Y := 1;
     {$ENDIF}
     PrintResources;
-    if area[Teki,Tekj].plm<>1 then Button1.Enabled := False;
+    if area[Teki,Tekj].plm<>1 then
+      begin
+        Button1.Enabled := False;
+        Lb1.Enabled := False;
+      end;
     PlaneEvent := 0;
     Invalidate;
     exit;    //И что дальше ?
@@ -415,19 +496,11 @@ Label8.Visible := False;
 Label9.Visible := False;
 Label10.Visible := False;
 Label11.Visible := False;
-{Edit9.Visible := False;
-Edit10.Visible := False;
-Edit11.Visible := False;
-Edit12.Visible := False;
-Edit13.Visible := False;
-}
 ShapesVisible(False);
 Button1.Text := 'Войти в здание';
+Lb1.Text := 'Войти в здание';
 ShapeRadius(1);
 ShapesPosition(1);
-//Button4.Visible := False;
-//Button6.Visible := False;
-
 TekBi := Teki;
 TekBj := Tekj;
 //exit;
@@ -446,15 +519,15 @@ end;
     case area2[Teki,Tekj].plm of
     2:  //Авиазавод
       begin
-        OknoTo2;
+        OknoTo2(area2[Teki,Tekj].plm);
         LevE.Visible := True;
         LevL.Visible := True;
         SetTAHString(AS_AviaFactory);
         GroupBox3.Visible := True;
-        CLearRadioGroups;//GroupBox3.Items.Clear;
-        //TRadioButton.Create(Groupbox1);
+        CLearRadioGroups;
         for I := 1 to 3 do AddRadio(RadioGroups[i],TypeSamToStr(i));//GroupBox3.Items.Add(TypeSamToStr(i));
-        Button16.Visible := True;
+       // Button16.Visible := True;
+        Lb3.Visible := True;
         if area2[Teki,Tekj].Regime>0 then
           begin
            // GroupBox3.ItemIndex := area2[Teki,Tekj].Regime-1;
@@ -463,7 +536,8 @@ end;
             //GroupBox3.Enabled := False;
             LevL.Text := 'Время осталось';
             LevE.Text := TimeToBuild(Int64ToTime(area2[Teki,Tekj].TimeToPusk-TimeStamp));
-            Button16.Text := 'Отменить производство';
+            //Button16.Text := 'Отменить производство';
+            Lb3.Text := 'Отменить производство';
           end
         else
          begin
@@ -471,55 +545,41 @@ end;
            LeditsVisible(True);
            LevL.Text := 'Время производства';
            GroupBox3.Enabled := True;
-           Button16.Text := 'Начать постройку';
+           //Button16.Text := 'Начать постройку';
+           Lb3.Text := 'Начать постройку';
            GroupBox3Click(Sender);
          end;
       end;
     3:   //Ангар
      begin
-      OknoTo2;
+      OknoTo2(area2[Teki,Tekj].plm);
       GroupBox3.Visible := True;
       GroupBox3.Enabled := True;
-      //GroupBox3.Items.Clear;
       CLearRadioGroups;
       LevL.Visible := True;
       LevE.Visible := True;
       LevE.Text := '';
       LeditsVisible(False);
-      //LabeledEdit1.Visible := True;
-     //LabeledEdit2.Visible := True;
       SetTAHString(AS_Hangar);
-     // i:=1;
-      //while (i<6) and (area2[Teki,Tekj].Angar[i]<>nil) do
-        //begin
       j := 1;
       with area2[Teki,Tekj] do
       for i := Low(Angar) to HangarHigh do
           if Angar[i]<>nil then
             begin
-              //RadioGroups[j] :=
-              //GroupBox3.Items.Add('Самолёт'+IntTOStr(i));
               AddRadio(RadioGroups[j],'Самолёт'+IntTOStr(i));
               RadioGroups[j].Enabled := True;
               RadioArray[j]:=i;
               inc(j);
             end;
-
-
-         // inc(i);
-        //end;
        //-Воостановить кнопку "вылет"
-      Button16.Visible := True;
-      Button16.Text := 'Вылет';
+      //Button16.Visible := True;
+      Lb3.Visible := True;
+      //Button16.Text := 'Вылет';
+      Lb3.Text := 'Вылет';
       GroupBox3Click(Sender);
      end;
-     {else
-       begin
-         OknoTo1;
-         Invalidate;
-       end; }
     end;
-  //  exit;
+
   end;
 2:
   begin
@@ -529,6 +589,7 @@ end;
     LeditsVisible(False);
     GroupBox3.Visible := False;
     Button16.Visible := False;
+    Lb3.Visible := False;
     Invalidate;//Button2.Click;
   end;
 end;
@@ -558,10 +619,6 @@ case area2[Teki,Tekj].plm of
   begin
     if area2[Teki,Tekj].Regime=0 then
       begin
-      //case GroupBox3.ItemIndex of
-      // 0:  StartBuild(C_Watcher,T_Watcher,101);
-      // 1:  StartBuild(C_Bomber,T_Bomber,102);
-      // 2:  StartBuild(C_Constructor,T_Constructor,103);
         if RadioGroups[1].IsChecked then StartBuild(C_Watcher,T_Watcher,101);
         if RadioGroups[2].IsChecked then StartBuild(C_Bomber,T_Bomber,102);
         if RadioGroups[3].IsChecked then StartBuild(C_Constructor,T_Constructor,103);
@@ -597,12 +654,6 @@ begin
   Memo1Visible :=  not Memo1Visible;
 
   Memo1.Visible := Memo1Visible;
-  {
-  if Memo1Visible then  S:='Enabled'
-                  else  S:= 'Disabled';
-  LogFile.WriteToLog('Memo1'+S);
-  }
-
 
 end;
 
@@ -616,16 +667,20 @@ begin
  Label10.Visible := True;
  Label11.Visible := True;
  Button1.Text :='Войти в базу';
+ Lb1.Text :='Войти в базу';
  //CLS;
 
  //Button2Click(Sender);
- Button4.Visible := True;
+ //Button4.Visible := True;
+ LB2.Visible := True;
  //Button6.Visible := True;
  ShapeRadius(0);
  ShapesPosition(0);
  ShapesVisible(True);
- GroupBox1.Visible := False;
- GroupBox2.Visible := False;
+ //GroupBox1.Visible := False;
+ //GroupBox2.Visible := False;
+ GroupBoxVisible(1,False);
+ GroupBoxVisible(2,False);
  Teki := TekBi;
  Tekj := TekBj;
  //ProgressBar1.Visible := False;
@@ -633,10 +688,12 @@ begin
  Panel4.Visible := True;
  Panel1Left := EtalonHeight+BaseLeft;
  Button4.Visible := False;
+ LB2.Visible := False;
  Label12.Visible :=False;
  Label13.Visible := False;
  Label14.Visible := False;
- Image1.Bitmap := AreaBitmaps[LastTerrain];
+ SetLastTerrain;
+ //Image1.Bitmap := AreaBitmaps[LastTerrain];
  Resize;
  Invalidate;
 end;
@@ -720,24 +777,12 @@ begin
    EditClick(Button,3600*10);
  {$ENDIF}
 
-  {
-  if Button = TMouseButton.mbRight then AddTime(3600*10,True);
-  if Button = TMouseButton.mbLeft  then AddTime(3600*10,False);
-  //Form1.Button2Click(Form1);
-  Invalidate;
-  }
 end;
 
 procedure TForm1.Edit3MouseUp;
 //var B:Boolean;
 begin
   EditClick(Button,3600);
-{
- if Button = TMouseButton.mbRight then AddTime(3600,True);
- if Button = TMouseButton.mbLeft  then AddTime(3600,False);
-//Form1.Button2Click(Form1);
- Invalidate;
- }
 end;
 
 
@@ -746,12 +791,6 @@ procedure TForm1.Edit5MouseUp;
 //var B:Boolean;
 begin
   EditClick(Button,600);
-{
- if Button = TMouseButton.mbRight then AddTime(600,True);
- if Button = TMouseButton.mbLeft  then AddTime(600,False);
-//Form1.Button2Click(Form1);
- Invalidate;
- }
 end;
 
 
@@ -766,12 +805,6 @@ begin
   {$ELSE}
   EditClick(Button,60);
  {$ENDIF}
-{
- if Button = TMouseButton.mbRight then AddTime(60,True);
- if Button = TMouseButton.mbLeft  then AddTime(60,False);
-//Form1.Button2Click(Form1);
- Invalidate;
- }
 end;
 
 
@@ -784,13 +817,6 @@ begin
   {$ELSE}
   EditClick(Button,10);
  {$ENDIF}
-
-{
- if Button = TMouseButton.mbRight then AddTime(10,True);
- if Button = TMouseButton.mbLeft  then AddTime(10,False);
-//Form1.Button2Click(Form1);
- Invalidate;
- }
 end;
 
 
@@ -844,6 +870,10 @@ begin
   Circles[2]     := Circle2;
   Circles[3]     := Circle3;
   Circles[4]     := Circle4;
+  ICircles[1]     := ImageC1;
+  ICircles[2]     := ImageC2;
+  ICircles[3]     := ImageC3;
+  ICircles[4]     := ImageC4;
   ResLabels[0]   := Label8;
   ResLabels[1]   := Label9;
   ResLabels[2]   := Label11;
@@ -878,6 +908,13 @@ begin
   Randomize;
   InitCompArrays;
   GroupBox3.Visible := False;
+   LabelGroup1 := TLabelGroup.Create;
+   LabelGroup1.Add(LabelR11);
+   LabelGroup1.Add(LabelR12);
+   LabelGroup2 := TLabelGroup.Create;
+   LabelGroup2.Add(LabelR21);
+   LabelGroup2.Add(LabelR22);
+   LabelGroup2.Add(LabelR23);
 
   for I := 1 to LArea do
    for j := 1 to LArea do
@@ -945,7 +982,11 @@ begin
        Combobox1.Items.Add(Copy(SearchRec.Name,0,Length(SearchRec.Name)-4));
        while FindNext(SearchRec) = 0  do Combobox1.Items.Add(Copy(SearchRec.Name,0,Length(SearchRec.Name)-4));
      end;
-  
+   {$IFDEF ANDROID}
+   LabelGroup1.SetFont(14);
+   LabelGroup2.SetFont(14);
+   {$ENDIF}
+
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -965,32 +1006,28 @@ end;
 procedure TForm1.SpeedButton1Click(Sender: TObject);
 var S:String;
 begin
-  //Memo2.Visible := not Memo2.Visible;
   Memo2Visible :=  not Memo2Visible;
   {$IFDEF ANDROID}
   Memo3.Visible := Memo2Visible;
   {$ELSE}
   Memo2.Visible := Memo2Visible;
   {$ENDIF}
-  //Cls;
-  //Memo3.Inva
+
   Memo3.Repaint;
   Panel4.Repaint;
   //Отладочная инфорация.
-  {
-  if Memo2Visible then  S:='Enabled'
-                  else  S:= 'Disabled';
-  LogFile.WriteToLog('Memo2'+S);
-  }
 end;
 
 procedure TForm1.OutPutStandart;
 begin
-  GroupBox1.Visible := False;
+  //GroupBox1.Visible := False;
+  GroupBoxVisible(1,False);
+  GroupBoxVisible(2,False);
   Label6.Text := S;
-  GroupBox2.Visible := False;
+  //GroupBox2.Visible := False;
   ShutDownShape;
-  Image1.Bitmap := BuildingBitmaps[Typeb];
+  SetLastHouse(Typeb);
+  //Image1.Bitmap := BuildingBitmaps[Typeb];
 end;
 
 
@@ -1004,13 +1041,18 @@ end;
 procedure TForm1.OutPutMine;
 var i:Integer;
 begin
-  GroupBox1.Visible := True;
-  //RadioGroup1.ItemIndex := area2[Teki,Tekj].Regime;
+  //GroupBox1.Visible := True;
+  GroupBoxVisible(1,True);
+
   GroupBox1.Text := 'Скорость работы';
   RadioButton11.Text := 'Добыча равна регенерации';
   RadioButton12.Text := 'Максимальная добыча';
-  if area2[Teki,Tekj].Regime=0 then RadioButton11.IsChecked := True
-                               else RadioButton12.IsChecked := True;
+  LabelR11.Text := 'Добыча равна регенерации';
+  LabelR12.Text := 'Максимальная добыча';
+  LabelGroup1.SetFont(11);
+
+  if area2[Teki,Tekj].Regime=0 then RadioSetChecked(1,1)//LabelGroup1.SetActive(1)//RadioButton11.IsChecked := True
+                               else RadioSetChecked(1,2);//LabelGroup1.SetActive(2);//RadioButton12.IsChecked := True;
 
   Label6.Text := S;
   i := BankofBases[1].FindBase(area2); //Работает только для игрока
@@ -1020,9 +1062,11 @@ begin
   Label12.Text := 'Добыча: ';
   Label13.Text := 'Текущая: '+IntToStr(BankofBases[1].Data[i].Miners[TypeMine])+'/'+IntToStr(GetRegen(BankofBases[1].Data[i].X,BankofBases[1].Data[i].Y,TypeMine));
   Label14.Text := 'Будущая: '+IntToStr(BankofBases[1].Data[i].NMiners[TypeMine]*BaseMine)+'/'+IntToStr(GetRegen(BankofBases[1].Data[i].X,BankofBases[1].Data[i].Y,TypeMine));
-  GroupBox2.Visible := False;
+  //GroupBox2.Visible := False;
+  GroupBoxVisible(2,False);
   ShutDownShape;
-  Image1.Bitmap := BuildingBitmaps[1];
+  SetLastHouse(1);
+ // Image1.Bitmap := BuildingBitmaps[1];
 end;
 
 procedure TForm1.StartBuild;
@@ -1066,6 +1110,7 @@ begin
            Samv:=False;
            //Здесь прописать висение
            Button1.Text := 'Войти в базу';
+           Lb1.Text := 'Войти в базу';
            SetFlyEvent(1,XToCoord(X),YToCoord(Y),TekSami);
           //exit;
         end
@@ -1083,17 +1128,16 @@ begin
                {$ENDIF}
                   for j := 0 to 3 do
                     begin
-                      Circles[j+1].Visible := False;
+                      ICircles[j+1].Visible := False;
                       if j>0 then ResLabels[j].Visible := False;
                     end;
-              {
-              Label9.Text := IntToStr(Samolets[i].Toplivo);
-              Label10.Text := IntToStr(Samolets[i].HitPoints);
-              Label11.Text := IntToStr(Samolets[i].Bombs);  }
+
               //Здесь выбрать "бомбардировка" и "основание базы"
               Samv := True;
               Button1.Text := 'Отменить полёт';
+              Lb1.Text := 'Отменить полёт';
               Button1.Enabled := True;
+              Lb1.Enabled := True;
               TekSam := Samolets[i];
               TekSami := i;
               //Не нужно. Бомбардировка идёт автоматически
@@ -1101,6 +1145,7 @@ begin
                 begin
                   PlaneEvent := 2; //Основать базу
                   Button1.Text := 'Основать базу';
+                  Lb1.Text := 'Основать базу';
                 end;
               exit;
             end;
@@ -1108,17 +1153,17 @@ begin
 
     for I := 0 to 3 do
       begin
-        Circles[i+1].Visible := True;
+        ICircles[i+1].Visible := True;
         ResLabels[i].Visible := True;
       end;
-    //Image1.Picture := nil;
 
     case GetType(Teki,Tekj) of
       0:  LastTerrain := 1;
       9:  LastTerrain := 2;
       else LastTerrain := 0;
     end;
-    Image1.Bitmap := AreaBitmaps[LastTerrain];
+
+    SetLastTerrain;
     {$IFDEF ANDROID}
         Label8.Scale.X := 1;
         Label8.Scale.Y := 1;
@@ -1128,13 +1173,8 @@ begin
 
         Label6.Text := 'Ваша база';
         for i:=0 to 3 do ResLabels[i].Text := IntToStr(area[Teki,Tekj].Res[i+1]);
-        {
-        Label8.Text := IntToStr(area[Teki,Tekj].Res[1]);
-        Label9.Text :=  IntToStr(area[Teki,Tekj].Res[2]);
-        Label11.Text :=  IntToStr(area[Teki,Tekj].Res[3]);
-        Label10.Text :=  IntToStr(area[Teki,Tekj].Res[4]);
-        }
         Button1.Enabled := True;
+        Lb1.Enabled := True;
         HearthBar1.Visible := True;
         HearthBar1.Hearth := Round(100*area[Teki,Tekj].areab[12,12].HitPoints/H_Main);
       end
@@ -1151,11 +1191,11 @@ begin
         else Label6.Text := 'Нет информации';
         PrintResources;
        // Button1.Enabled := False;
-       if (CheatMode  and (area[Teki,Tekj].plm>0)) or  Samv then Button1.Enabled := True
-                                                            else Button1.Enabled := False;
+       if (CheatMode  and (area[Teki,Tekj].plm>0)) or  Samv then LB1.Enabled := True//Button1.Enabled := True
+                                                            else LB1.Enabled := False;//Button1.Enabled := False;
       end;
-      if Samv then Button1.Text := 'Отменить полёт'
-              else Button1.Text := 'Войти в базу';
+      if Samv then Lb1.Text := 'Отменить полёт' //Button1.Text := 'Отменить полёт'
+              else Lb1.Text := 'Войти в базу';//Button1.Text := 'Войти в базу';
       Invalidate;
     end;
      1:
@@ -1168,12 +1208,12 @@ begin
          case area2[Teki,Tekj].plm of
            0:
              begin
-               if (GroupBox2.Visible= True) and (RadioButton12.isChecked) then //RadioGroup1.ItemIndex=1) then
+               if (GroupBoxIsVisible(2)= True) and ({RadioButton12.isChecked}RadioChecked(1,2)) then //RadioGroup1.ItemIndex=1) then
                  begin
                    //case GroupBox2.ItemIndex of
-                     if RadioButton21.IsChecked then  StartBuild(C_AviaFactory,T_AviaFactory,2);
-                     if RadioButton22.IsChecked then  StartBuild(C_Hangar,T_Hangar,3);
-                     if RadioButton23.IsChecked then
+                     if {RadioButton21.IsChecked}RadioChecked(2,1) then  StartBuild(C_AviaFactory,T_AviaFactory,2);
+                     if {RadioButton22.IsChecked}RadioChecked(2,2) then  StartBuild(C_Hangar,T_Hangar,3);
+                     if {RadioButton23.IsChecked}RadioChecked(2,3) then
                        if ActiveShape>0 then StartBuild(C_Mine,T_Mine,ActiveShape+3);
 
                    //end;
@@ -1183,32 +1223,43 @@ begin
                  end
                else
                  begin
-                   GroupBox1.Visible := False;
-                   GroupBox2.Visible := False;
+                   //GroupBox1.Visible := False;
+                   //GroupBox2.Visible := False;
+                   GroupBoxVisible(1,False);
+                   GroupBoxVisible(2,False);
                    Label6.Text := '';
                  end;
-               Image1.Bitmap := AreaBitmaps[LastTerrain];
+               //Image1.Bitmap := AreaBitmaps[LastTerrain];
+               SetLastTerrain;
              end;
            1:
              begin
-               GroupBox1.Visible := True;
+               //GroupBox1.Visible := True;
+               GroupBoxVisible(1,True);
                GroupBox1.Text := 'Режим работы';
                //GroupBox1.ItemIndex := 0;
-               RadioButton11.IsChecked := True;
+               //RadioButton11.IsChecked := True;
+               RadioSetChecked(1,1);
                RadioButton11.Text := 'Модернизация';
                RadioButton12.Text:= 'Строительство';
+               LabelR11.Text := 'Модернизация';
+               LabelR12.Text := 'Строительство';
+               LabelGroup1.SetFont(14);
                Label6.Text := 'Штаб';
-               GroupBox2.Visible := True;
+               //GroupBox2.Visible := True;
+               GroupBoxVisible(2,True);
               // GroupBox2.ItemIndex := area2[Teki,Tekj].Regime;
-               case area2[Teki,Tekj].Regime of
+                RadioSetChecked(2,area2[Teki,Tekj].Regime+1);
+               {case area2[Teki,Tekj].Regime of
                   0: RadioButton21.IsChecked := True;
                   1: RadioButton22.IsChecked := True;
                   2: RadioButton23.IsChecked := True;
-               end;
+               end;}
                ShutDownShape;
                HearthBar1.Visible := True;
                HearthBar1.Hearth := Round(100*area2[Teki,Tekj].HitPoints/H_Main);
-               Image1.Bitmap := BuildingBitmaps[0];
+               SetLastHouse(0);
+               //Image1.Bitmap := BuildingBitmaps[0];
              end;
            2: OutPutStandart(S_AviaFactory,2);
            3: OutPutStandart(S_Hangar,3);
@@ -1297,9 +1348,20 @@ begin
    Panel1.Position.X := EtalonToX(Panel1Left);
    Panel1.Height := EtalonToY(EtalonHeight);
    Panel1.Width := EtalonToX(EtalonWidth-Panel1Left);
-   Image1.Position.Y := EtalonToY(112);
-   Image1.Width := EtalonToX(234);
+   Image1.Position.Y := EtalonToY(108);
+   Image1.Position.X := Panel1.Width*11/250;
+   Image1.Width := Panel1.Width*226/250;
    Image1.Height := EtalonToY(225);
+   Image2.Width := Panel1.Width;
+   Image2.Height := Panel1.Height;
+   Image3.Width := Panel1.Width;
+   Image3.Height := Image1.Position.Y;
+   Image4.Height := Panel4.Height;
+   Image4.Width :=  Panel4.Width;
+   Image5.Position.X := 0;
+   Image5.Position.Y := 0;
+   Image5.Height := _ClientHeight;
+   Image5.Width := Panel1.Position.X+1;
 
    GroupBox1.Position.Y := EtalonToY(361);
    GroupBox2.Position.Y := EtalonToY(464);
@@ -1307,33 +1369,58 @@ begin
 
    ShapeRadius(Okno);
    ShapesPosition(Okno);
+   if Okno=0 then Label6.Position.X := Panel1.Width/20
+             else Label6.Position.X := Panel1.Width/5;
+
+   Edit2.FontColor := TAlphaColorRec.Black;
 
 
    {$IFDEF ANDROID}
-   Label2.Position.Y := EtalonToY(45);
-   Label1.Position.Y := EtalonToY(45);
+  { LabelR11.Font.Size := 14;
+   LabelR12.Font.Size := 14;
+   LabelR21.Font.Size := 14;
+   LabelR22.Font.Size := 14;
+   LabelR23.Font.Size := 14; }
+   Edit2.FontColor := TAlphaColorRec.White;
+   Label2.Position.Y := Image1.Position.Y+EtalonToY(10);
+   Label1.Position.Y := Image1.Position.Y+EtalonToY(8); //EtalonToY(45);
    Label2.Position.X := EtalonToX(10);
-   Label1.Position.X := EtalonToX(10)+Panel1.Width/2;
+   Label1.Position.X := {EtalonToX(10)}+Panel1.Width/2;
    Label1.TextSettings.Font.Size := 12;
    Label2.TextSettings.Font.Size := 12;
-   Label6.Position.X := EtalonToX(2);
+   if Okno=0 then Label6.Position.X := EtalonToX(2)
+             else Label6.Position.X := EtalonToX(20);
    Label7.Position.X := EtalonToX(10)+Panel1.Width/2;
-   Label6.Position.Y := EtalonToY(75);
-   Label7.Position.Y := EtalonToY(75);
+   Label6.Position.Y := Image1.Position.Y+Image1.Height-EtalonToY(50);//EtalonToY(75);
+   Label7.Position.Y := Image1.Position.Y+Image1.Height-EtalonToY(50);//EtalonToY(75);
    Label7.TextSettings.Font.Size := 12;
    Label6.TextSettings.Font.Size := 11;
    Label6.Width:= Panel1.Width;
    //Поставить в SetPosition
    Button4.Position.Y := EtalonToY(670);
+   Lb2.Position.X := EtalonToX(36);
+   Lb2.Width := EtalonToX(220);
+   Lb2.Position.Y := EtalonToY(670);
    Button1.Position.Y := EtalonToY(740);
    Button1.Position.X := EtalonToX(36);
+   Lb1.Position.X := EtalonToX(36);
+   Lb1.Width := EtalonToX(220);
+   Lb1.Position.Y := EtalonToY(740);
    Button4.Position.X := EtalonToX(36);
    Button1.Height := EtalonToY(44);
    Button4.Height := EtalonToY(44);
    Button16.Position.X := EtalonToX(490);
+   Lb3.Position.X := EtalonToX(490);
+   Lb3.Width := Panel1.Position.X - Lb3.Position.X;
+   Lb3.Height := 35;
+
+
+   Rectangle1.Visible := True;
+
    Button16.TextSettings.Font.Size := 14;
 
    TimerPosition(Okno);
+
 
    for i:=0 to 3 do 
      begin
@@ -1370,15 +1457,17 @@ begin
    RadioButton21.Scale.Y := EtalonToY(100)/100;
    RadioButton22.Scale.Y := EtalonToY(100)/100;
    RadioButton23.Scale.Y := EtalonToY(100)/100;
-   GroupBox1.TextSettings.Font.Size := 8;
-   GroupBox1.Height := EtalonToY(80);
-   GroupBox2.TextSettings.Font.Size := 8;
-   GroupBox2.Height := EtalonToY(116);
-   RadioButton11.Position.Y := EtalonToY(23);
-   RadioButton12.Position.Y := EtalonToY(50);
-   RadioButton21.Position.Y := EtalonToY(23);
-   RadioButton22.Position.Y := EtalonToY(50);
-   RadioButton23.Position.Y := EtalonToY(77);
+   //GroupBox1.TextSettings.Font.Size := 8;
+   //GroupBox1.Height := EtalonToY(80);
+   //GroupBox2.TextSettings.Font.Size := 8;
+  // GroupBox2.Height := EtalonToY(116);
+   LabelGroup1.SetPosition(12,EtalonToY(361),EtalonToX(250));
+   LabelGroup2.SetPosition(12,EtalonToY(464),EtalonToX(250));
+   //RadioButton11.Position.Y := EtalonToY(23);
+   //RadioButton12.Position.Y := EtalonToY(50);
+   //RadioButton21.Position.Y := EtalonToY(23);
+   //RadioButton22.Position.Y := EtalonToY(50);
+   //RadioButton23.Position.Y := EtalonToY(77);
    Memo1.Position.X := EtalonToX(230);
    Memo3.Position.X := EtalonToX(230);
    Memo1.Height := EtalonToY(800);
@@ -1398,10 +1487,6 @@ begin
    Combobox1.Width := Panel4.Width-EtalonToX(16);
    Edit2.Position.X := EtalonToX(8);
    Edit2.Width := Panel4.Width-EtalonToX(16);
-     {
-   Label12.Position.Y := EtalonToY(450);
-   Label13.Position.Y := EtalonToY(470);
-   Label14.Position.Y := EtalonToY(490);  }
    {$ENDIF}
 end;
 
@@ -1414,15 +1499,45 @@ end;
 
 procedure TForm1.GroupBox2Click(Sender: TObject);
 begin
-   if (RadioButton23.IsChecked) and (RadioButton12.IsChecked) then ShapesVisible(True)
-                                                              else ShapesVisible(False);
+   if RadioChecked(2,3) and RadioChecked(1,2)  then ShapesVisible(True)  //{(RadioButton23.IsChecked) and (RadioButton12.IsChecked)}
+                                               else ShapesVisible(False);
 
 end;
 
 procedure TForm1.ShapesVisible;
 var i:Integer;
 begin
-  for i:=Low(Circles) to High(Circles) do Circles[i].Visible := B;
+  for i:=Low(ICircles) to High(ICircles) do ICircles[i].Visible := B;
+end;
+
+procedure TForm1.LabelR11Click(Sender: TObject);
+begin
+  LabelGroup1.SetActive(0);
+  GroupBox2Click(Sender);
+end;
+
+procedure TForm1.LabelR12Click(Sender: TObject);
+begin
+ LabelGroup1.SetActive(1);
+ GroupBox2Click(Sender);
+end;
+
+procedure TForm1.LabelR21Click(Sender: TObject);
+begin
+  LabelGroup2.SetActive(0);
+  GroupBox2Click(Sender);
+end;
+
+procedure TForm1.LabelR22Click(Sender: TObject);
+begin
+  LabelGroup2.SetActive(1);
+  GroupBox2Click(Sender);
+end;
+
+procedure TForm1.LabelR23Click(Sender: TObject);
+begin
+  LabelGroup2.SetActive(2);
+  GroupBox2Click(Sender);
 end;
 
 procedure TForm1.LeditsVisible;
@@ -1480,15 +1595,15 @@ var i:Integer;
 begin
   for i:=1 to 4 do
     begin
-       Circles[i].Height := SmallRadius;//EtalonToY(SmallRadius);
-       Circles[i].Width  := SmallRadius;//EtalonToY(SmallRadius);
+       ICircles[i].Height := SmallRadius;//EtalonToY(SmallRadius);
+       ICircles[i].Width  := SmallRadius;//EtalonToY(SmallRadius);
     end;
   ActiveShape := N;
   if ActiveShape>4 then ActiveShape := 0;
   if N>0 then
     begin
-     Circles[N].Height := BigRadius;//EtalonToY(BigRadius);
-     Circles[N].Width  := BigRadius;//EtalonToY(BigRadius);
+     ICircles[N].Height := BigRadius;//EtalonToY(BigRadius);
+     ICircles[N].Width  := BigRadius;//EtalonToY(BigRadius);
     end;
 end;
 
@@ -1540,6 +1655,77 @@ begin
       MediaPlayer1.Play;
     end;
 end;
+
+procedure TForm1.GroupBoxVisible;
+begin
+  case i of
+    {$IFDEF ANDROID}
+     1: LabelGroup1.Visible := v;
+     2: LabelGroup2.Visible := v;
+    {$ELSE}
+     1: GroupBox1.Visible := v;
+     2: GroupBox2.Visible := v;
+    {$ENDIF}
+  end;
+end;
+
+function TForm1.GroupBoxIsVisible;
+begin
+  case i of
+    {$IFDEF ANDROID}
+     1: result := LabelGroup1.Visible;
+     2: result := LabelGroup2.Visible;
+    {$ELSE}
+     1: result := GroupBox1.Visible;
+     2: result := GroupBox2.Visible;
+    {$ENDIF}
+  end;
+end;
+
+function TForm1.RadioChecked(i: Integer; j: Integer): Boolean;
+begin
+  case i of
+    {$IFDEF ANDROID}
+     1: result := LabelGroup1.Active = j - 1;
+     2: result := LabelGroup2.Active = j - 1;
+    {$ELSE}
+     1:
+       case j of
+         1: Result := RadioButton11.IsChecked;
+         2: Result := RadioButton12.IsChecked;
+       end;
+     2:
+      case j of
+         1: Result := RadioButton21.IsChecked;
+         2: Result := RadioButton22.IsChecked;
+         3: Result := RadioButton23.IsChecked;
+       end;
+    {$ENDIF}
+  end;
+end;
+
+procedure TForm1.RadioSetChecked;
+begin
+  case i of
+    {$IFDEF ANDROID}
+     1: LabelGroup1.Active := j - 1;
+     2: LabelGroup2.Active := j - 1;
+    {$ELSE}
+     1:
+       case j of
+         1: RadioButton11.IsChecked := True;
+         2: RadioButton12.IsChecked := True;
+       end;
+     2:
+      case j of
+         1: RadioButton21.IsChecked := True;
+         2: RadioButton22.IsChecked := True;
+         3: RadioButton23.IsChecked := True;
+       end;
+    {$ENDIF}
+  end;
+end;
+
 
 function GetSoundPath;
 begin

@@ -35,6 +35,7 @@ PlanesCols : Array [1..NPlayers] of LongWord = ($FFFF0000,$FF0000FF,$FF00FF00,$F
 //Первое FF это нет прозрачности.
 AreaBitmaps : Array[0..2] of TBitmap;
 BuildingBitmaps : Array[0..3] of TBitmap;  //0-штаб 1 -шахта 2- авиазавод 3-ангар.
+InBuildingBitmaps : Array[0..3] of TBitmap;
 _ClientWidth : Integer = 1280;
 _ClientHeight : Integer =  800;
 HearthBar1 : THearthBar;
@@ -58,8 +59,8 @@ function  IsWater(i,j:byte):Boolean;
 function  ColorToAlpha(A:Integer):TAlphaColor;
 function  BitmapToRect(const B:TBitmap):TRect;
 procedure LoadAreaBitmaps;
-function EtalonToX(X:Double):Integer;
-function EtalonToY(Y:Double):Integer;
+function EtalonToX(X:Double):Double;
+function EtalonToY(Y:Double):Double;
 function XToEtalon(X:Single):Integer;
 function YToEtalon(Y:Single):Integer;
 function XToSec(X:Single):Integer;
@@ -83,6 +84,9 @@ begin
   BuildingBitmaps[1].LoadFromFile(GetImagesPath+'/mine.jpg');
   BuildingBitmaps[2].LoadFromFile(GetImagesPath+'/avia.jpg');
   BuildingBitmaps[3].LoadFromFile(GetImagesPath+'/hangar.jpg');
+  for I := 0 to 3 do InBuildingBitmaps[i] := TBitmap.Create;
+  InBuildingBitmaps[2].LoadFromFile(GetImagesPath+'/avia_in.png');
+  InBuildingBitmaps[3].LoadFromFile(GetImagesPath+'/hangar_in.png');
 end;
 
 function GetColor(var BD: TBitmapData;Component :integer; x:Integer;y:Integer):Byte;
@@ -330,12 +334,12 @@ begin
 end;
 
 
-Function EtalonToX(X:Double):Integer;
+Function EtalonToX(X:Double):Double;
 begin
   Result:=Round(X*_ClientWidth/EtalonWidth);
 end;
 
-Function EtalonToY(Y:Double):Integer;
+Function EtalonToY(Y:Double):Double;
 begin
   Result:=Round(Y*_ClientHeight/EtalonHeight);
 end;
@@ -509,10 +513,10 @@ begin
   else
     if Hearth<67 then State := 1
     else State := 2;
-  Rect1.Top := ETalonToY(340);
-  Rect1.Left := ETalonToX(Left);//1012);
-  Rect1.Width := ETalonToX(2.25*Hearth);
-  Rect1.Height := ETalonToY(20);
+  Rect1.Top := Round(ETalonToY(340));
+  Rect1.Left := Round(ETalonToX(Left));//1012);
+  Rect1.Width := Round(ETalonToX(2.25*Hearth));
+  Rect1.Height := Round(ETalonToY(20));
   //Owner.BeginScene();
   Owner.DrawBitmap(StateBMP[State],BitmapToRect(StateBMP[State]),Rect1,1,False);
   //Owner.EndScene();

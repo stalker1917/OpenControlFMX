@@ -11,7 +11,8 @@ uses
   OCGraph in 'OCGraph.pas',
   TimeManager in 'TimeManager.pas',
   Debug in 'Debug.pas',
-  BaseManager in 'BaseManager.pas';
+  BaseManager in 'BaseManager.pas',
+  LabelGroup in 'LabelGroup.pas';
 
 {$R *.res}
 
